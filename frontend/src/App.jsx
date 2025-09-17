@@ -105,7 +105,7 @@ const LocationMap = ({ location, formatTimestamp, path }) => {
   const position = [parseFloat(location.latitude), parseFloat(location.longitude)];
   
   const customIcon = new Icon({
-    iconUrl: "/icon.svg",
+    iconUrl: "/icon.png",
     iconSize: [70, 70]
   });
 
