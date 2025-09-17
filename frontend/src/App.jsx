@@ -48,12 +48,9 @@ const ErrorMessage = ({ error, onRetry }) => (
 const LocationInfo = ({ location, formatTimestamp }) => (
   <div className='max-w-[100%] p-8'>
     <h2 className='text-2xl font-bold text-white text-center rounded-4xl mb-8'>Última Ubicación</h2>
-    
+
     <div className='flex flex-row justify-between gap-4 glassmorphism group rounded-xl mb-3 pl-2 pr-6 py-2'>
       <div className='flex flex-row gap-2 justify-left transition-all duration-300'>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="text-white duration-300 size-6">
-          <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72H8.25a.75.75 0 0 0 0 1.5h5.69l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3Z" clipRule="evenodd" />
-        </svg>
         <h3 className='text-l text-white rounded-xl inline-block'>Latitud:</h3>
       </div>
       <div className="flex flex-col items-end">
@@ -63,9 +60,6 @@ const LocationInfo = ({ location, formatTimestamp }) => (
 
     <div className='flex flex-row justify-between gap-4 glassmorphism group rounded-xl mb-3 pl-2 pr-6 py-2'>
       <div className='flex flex-row gap-2 justify-left transition-all duration-300'>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="text-white duration-30 size-6">
-          <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clipRule="evenodd" />
-        </svg>
         <h3 className='text-l text-white rounded-xl inline-block'>Longitud:</h3>
       </div>
       <div className="flex flex-col items-end">
@@ -75,9 +69,6 @@ const LocationInfo = ({ location, formatTimestamp }) => (
 
     <div className='flex flex-row justify-between gap-4 glassmorphism group rounded-xl mb-3 pl-2 pr-6 py-2'>
       <div className='flex flex-row gap-2 group justify-left transition-all duration-300'>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="text-white duration-300 size-6">
-          <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd" />
-        </svg>
         <h3 className='text-l text-white rounded-xl inline-block'>Timestamp:</h3>
       </div>
       <div className="flex flex-col items-end">
@@ -103,7 +94,7 @@ const MapUpdater = ({ position }) => {
 // --- Componente del Mapa ---
 const LocationMap = ({ location, formatTimestamp, path }) => {
   const position = [parseFloat(location.latitude), parseFloat(location.longitude)];
-  
+
   const customIcon = new Icon({
     iconUrl: "/icon.png",
     iconSize: [70, 70]
@@ -114,8 +105,8 @@ const LocationMap = ({ location, formatTimestamp, path }) => {
 
   return (
     <div className='glassmorphism-strong rounded-4xl backdrop-blur-lg shadow-lg p-4 max-w-4xl w-full mx-4'>
-      <MapContainer 
-        center={position} 
+      <MapContainer
+        center={position}
         zoom={18}
         style={{ height: '35rem', width: '100%', borderRadius: '1rem' }}
       >
@@ -127,14 +118,14 @@ const LocationMap = ({ location, formatTimestamp, path }) => {
         <Marker position={position} icon={customIcon}>
           <Popup>
             <div className="text-center">
-              <strong>Ubicación actual</strong><br/>
-              <small>Recibida: {formatTimestamp(location.timestamp_value)}</small><br/>
-              <small>Lat: {parseFloat(location.latitude).toFixed(6)}</small><br/>
+              <strong>Ubicación actual</strong><br />
+              <small>Recibida: {formatTimestamp(location.timestamp_value)}</small><br />
+              <small>Lat: {parseFloat(location.latitude).toFixed(6)}</small><br />
               <small>Lng: {parseFloat(location.longitude).toFixed(6)}</small>
             </div>
           </Popup>
         </Marker>
-        
+
         {/* Componente que dibuja la trayectoria */}
         <Polyline pathOptions={polylineOptions} positions={path} />
 
@@ -155,7 +146,7 @@ function App() {
   const fetchLatestLocation = async () => {
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/location/latest`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           setError('No hay datos de ubicación disponibles');
@@ -166,7 +157,7 @@ function App() {
       } else {
         const data = await response.json();
         setLocationData(data);
-        
+
         const newPosition = [parseFloat(data.latitude), parseFloat(data.longitude)];
         setPath(prevPath => {
           const lastPoint = prevPath[prevPath.length - 1];
@@ -237,15 +228,16 @@ function App() {
           <ErrorMessage error={error} onRetry={fetchLatestLocation} />
         ) : locationData ? (
           <>
-            <LocationInfo location={locationData} formatCoordinate={formatCoordinate} formatTimestamp={formatTimestamp} />
             <LocationMap location={locationData} formatTimestamp={formatTimestamp} path={path} />
+            <LocationInfo location={locationData} formatCoordinate={formatCoordinate} formatTimestamp={formatTimestamp} />
+
           </>
         ) : (
           <div className="glassmorphism-strong min-w-[90%] mx-auto rounded-4xl p-8 text-center">
             <p className="text-white/70 mb-4">Esperando datos de ubicación...</p>
             <p className="text-white/50 text-sm mb-4">Conectando via Polling...</p>
-            <button 
-              onClick={fetchLatestLocation} 
+            <button
+              onClick={fetchLatestLocation}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg transition-colors"
             >
               Refrescar
