@@ -214,7 +214,7 @@ function App() {
 
       <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 min-w-[80%] md:min-w-[90%] py-3 px-4 rounded-4xl">
         <div className="flex flex-col items-center gap-2">
-          <h1 className="py-1 px-3 text-center font-bold text-white/80 text-3xl">
+          <h1 className="py-1 px-3 text-center font-bold text-white/80 text-4xl">
             {config.APP_NAME}
           </h1>
           <p className="text-white/60 text-sm">{config.APP_SUBTITLE}</p>
