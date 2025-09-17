@@ -7,8 +7,8 @@ import { ThreeDot } from 'react-loading-indicators';
 // --- Configuración Básica (simplificada) ---
 const config = {
   API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:2000',
-  APP_NAME: 'Roger_GPS',
-  APP_SUBTITLE: 'El mejor traqueador de GPS',
+  APP_NAME: 'RogerGPS',
+  APP_SUBTITLE: 'THE BEST',
   POLLING_INTERVAL: import.meta.env.VITE_POLLING_INTERVAL || 5000,
   // Se eliminaron JAWG_ACCESS_TOKEN y JAWG_MAP_ID
 };
