@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        instance: [1, 2] # Adjust if you have more or fewer instances
+        instance: [1] # Adjust if you have more or fewer instances
 
     steps:
     - name: Checkout code
