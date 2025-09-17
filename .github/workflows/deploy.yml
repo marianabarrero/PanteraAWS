@@ -1,0 +1,61 @@
+name: Deploy Full-Stack to EC2 Instances
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - ".github/workflows/deploy.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        instance: [1]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to EC2 Instance ${{ matrix.instance }}
+        env:
+          HOST: ${{ secrets[format('EC2_HOST_{0}', matrix.instance)] }}
+          USER: ${{ secrets[format('EC2_USER_{0}', matrix.instance)] }}
+          KEY: ${{ secrets[format('EC2_SSH_KEY_{0}', matrix.instance)] }}
+          ENV_BACKEND: ${{ secrets[format('ENV_FILE_BACKEND_{0}', matrix.instance)] }}
+          ENV_FRONTEND: ${{ secrets[format('ENV_FILE_FRONTEND_{0}', matrix.instance)] }}
+        run: |
+          echo "🚀 Iniciando despliegue en la instancia ${{ matrix.instance }}..."
+          
+          echo "$KEY" > deploy_key
+          chmod 600 deploy_key
+          
+          ssh -o StrictHostKeyChecking=no -i deploy_key ${USER}@${HOST} "
+            cd /opt/location-tracker
+            
+            echo '📦 Actualizando código desde Git...'
+            git pull origin main
+            
+            # --- Configurar y reiniciar el Backend (Python) ---
+            echo '⚙️  Configurando Backend en Python...'
+            cd backend
+            echo '$ENV_BACKEND' > .env
+            pip3 install -r requirements.txt
+            # Reinicia el proceso de pm2. Si no existe, el comando de 'setup.sh' lo habrá creado.
+            pm2 restart location-backend
+            
+            # --- Configurar y construir el Frontend ---
+            echo '🖥️  Configurando Frontend...'
+            cd ../frontend
+            echo '$ENV_FRONTEND' > .env
+            npm install
+            npm run build
+            
+            echo '🌐 Recargando Nginx...'
+            sudo nginx -t && sudo systemctl reload nginx
+            
+            echo '✅ Despliegue completado exitosamente en la instancia ${{ matrix.instance }}'
+          "
